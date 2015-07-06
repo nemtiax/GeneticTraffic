@@ -27,4 +27,16 @@ public class Graph {
 	public int getNumEdges() {
 		return allEdges.size();
 	}
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append("Nodes:\n");
+		for(Node n : allNodes) {
+			result.append("\t" + n + "\n");
+		}
+		result.append("Edges:\n");
+		for(Edge e : allEdges) {
+			result.append("\t" + e + "\n");
+		}
+		return result.toString();
+	}
 }

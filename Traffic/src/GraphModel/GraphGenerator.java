@@ -48,4 +48,9 @@ public class GraphGenerator {
 		
 		
 	}
+	public static void main(String[] args) {
+		GraphGenerator gen = new GraphGenerator(10,35);
+		Graph result = gen.generate();
+		System.out.println(result);
+	}
 }

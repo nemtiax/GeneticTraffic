@@ -43,4 +43,7 @@ public class Edge {
 		return false;
 	}
 	
+	public String toString() {
+		return start + " --> " + end + "; length=" + length + "; capacity=" + capacity;
+	}
 }

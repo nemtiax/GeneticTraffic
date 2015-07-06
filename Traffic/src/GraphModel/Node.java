@@ -21,6 +21,10 @@ public class Node {
 		return id;
 	}
 	
+	public String toString() {
+		return "Node " + id;
+	}
+	
 	public void addOutgoingEdge(Edge e) {
 		outgoingEdges.add(e);
 	}
