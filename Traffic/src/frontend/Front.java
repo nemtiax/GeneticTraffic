@@ -1,55 +1,77 @@
 package frontend;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 import javax.swing.*;
-public class Front extends JFrame
-{
+
+public class Front extends JFrame {
+	JPanel drawing;
+
 	public Front() {
+		this.drawing = new JPanel();
+		initUI();
+	}
 
-        initUI();
-    }
+	private void initUI() {
+		// Create and set up the window.
+		JFrame frame = new JFrame("Amazing Interface");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    private static void initUI() {
-    	//Create and set up the window.
-        JFrame frame = new JFrame("Amazing Interface");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
- 
-        JLabel emptyLabel = new JLabel("");
-        emptyLabel.setPreferredSize(new Dimension(175, 100));
-        frame.getContentPane().add(emptyLabel, BorderLayout.CENTER);
-        JPanel drawing = new JPanel();
-        drawing.setPreferredSize(new Dimension(300,300));
-        frame.getContentPane().add(drawing);
-        RectDraw newrect = new RectDraw();
-        newrect.getPreferredSize();
-        drawing.add(newrect);
-        
-        //Display the window.
-        frame.pack();
-        frame.setVisible(true);
-    }
-	
+		JLabel emptyLabel = new JLabel("");
+		//emptyLabel.setPreferredSize(new Dimension(175, 100));
+		frame.getContentPane().add(emptyLabel, BorderLayout.CENTER);
+		drawing.setPreferredSize(new Dimension(1000, 500));
+		frame.getContentPane().add(drawing);
+		//addNode(100, 80);
+		//addNode(80, 80);
+		//addNode(30, 80);
+		//addNode(0,0);
+
+		BufferedImage image = new BufferedImage(100,100, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = (Graphics2D) image.getGraphics(); //also tried image.createGraphics();
+		g2.drawString("Hello world", 20, 20);
+		
+		
+		drawing.getGraphics().drawImage(image, 10, 10, null);
+		
+		// Display the window.
+		frame.pack();
+		frame.setVisible(true);
+	}
+
+	private void addNode(int x, int y, RectDraw panel) {
+		//RectDraw newrect = new RectDraw(x, y);
+		//drawing.add(newrect);
+		
+
+	}
+
+	private static class RectDraw extends JPanel {
+		private BufferedImage image;
+		public RectDraw(BufferedImage m) {
+			this.image = m;
+		}
+
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			g.drawImage(image, 0, 0, null);
+		}
+
+		public Dimension getPreferredSize() {
+			return new Dimension(200, 200); // appropriate constants
+		}
+	}
+
 	public static void main(String[] args) {
 
-		 //Front ex = new Front();
-         //ex.setVisible(true);
+		// Front ex = new Front();
+		// ex.setVisible(true);
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                initUI();
-            }
-        });
+			public void run() {
+				Front f = new Front();
+			}
+		});
 	}
-	private static class RectDraw extends JPanel {
-		  protected void paintComponent(Graphics g) {
-		    super.paintComponent(g);  
-		    g.drawRect(230,80,10,10);  
-		    g.setColor(Color.RED);  
-		    g.fillRect(230,80,10,10);  
-		  }
 
-		  public Dimension getPreferredSize() {
-		    return new Dimension(200, 200); // appropriate constants
-		  }
-		}
 }
