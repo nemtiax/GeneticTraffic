@@ -6,10 +6,9 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 
 public class Front extends JFrame {
-	JPanel drawing;
 
 	public Front() {
-		this.drawing = new JPanel();
+
 		initUI();
 	}
 
@@ -19,38 +18,50 @@ public class Front extends JFrame {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JLabel emptyLabel = new JLabel("");
-		//emptyLabel.setPreferredSize(new Dimension(175, 100));
 		frame.getContentPane().add(emptyLabel, BorderLayout.CENTER);
-		drawing.setPreferredSize(new Dimension(1000, 500));
-		frame.getContentPane().add(drawing);
-		//addNode(100, 80);
-		//addNode(80, 80);
-		//addNode(30, 80);
-		//addNode(0,0);
 
-		BufferedImage image = new BufferedImage(100,100, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2 = (Graphics2D) image.getGraphics(); //also tried image.createGraphics();
-		g2.drawString("Hello world", 20, 20);
-		
-		
-		drawing.getGraphics().drawImage(image, 10, 10, null);
-		
+		BufferedImage image = new BufferedImage(500, 500, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = (Graphics2D) image.getGraphics();
+		g2.setColor(Color.BLACK);
+		// g2.drawString("Hello world", 30, 30);
+
+		addNode(10, 10, g2);
+		addNode(30, 30, g2);
+		addNode(60, 60, g2);
+		addNode(90, 90, g2);
+		addNode(110, 110, g2);
+		addNode(300, 300, g2);
+
+		int maxX = 1000;
+		int maxY = 1000;
+
+		RectDraw drawing = new RectDraw(image, maxX, maxY);
+
+		frame.getContentPane().add(drawing);
 		// Display the window.
 		frame.pack();
 		frame.setVisible(true);
 	}
 
-	private void addNode(int x, int y, RectDraw panel) {
-		//RectDraw newrect = new RectDraw(x, y);
-		//drawing.add(newrect);
-		
+	private void addNode(int x, int y, Graphics2D graphic) {
+		// RectDraw newrect = new RectDraw(x, y);
+		// drawing.add(newrect);
+		graphic.setColor(Color.RED);
+		graphic.drawRect(x, y, 10, 10);
+		graphic.fillRect(x, y, 10, 10);
+		graphic.setColor(Color.BLACK);
 
 	}
 
 	private static class RectDraw extends JPanel {
 		private BufferedImage image;
-		public RectDraw(BufferedImage m) {
+		int x;
+		int y;
+
+		public RectDraw(BufferedImage m, int x, int y) {
 			this.image = m;
+			this.x = x;
+			this.y = y;
 		}
 
 		protected void paintComponent(Graphics g) {
@@ -59,14 +70,11 @@ public class Front extends JFrame {
 		}
 
 		public Dimension getPreferredSize() {
-			return new Dimension(200, 200); // appropriate constants
+			return new Dimension(x, y); // appropriate constants
 		}
 	}
 
 	public static void main(String[] args) {
-
-		// Front ex = new Front();
-		// ex.setVisible(true);
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				Front f = new Front();
