@@ -1,14 +1,26 @@
 package frontend;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.util.Set;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import GraphModel.Graph;
+import GraphModel.GraphGenerator;
+import GraphModel.Node;
 
 public class Front extends JFrame {
-
-	public Front() {
-
+	Graph graph;
+	public Front(Graph g) {
+		this.graph = g;
 		initUI();
 	}
 
@@ -17,24 +29,14 @@ public class Front extends JFrame {
 		JFrame frame = new JFrame("Amazing Interface");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JLabel emptyLabel = new JLabel("");
+		JLabel emptyLabel = new JLabel("Hello");
 		frame.getContentPane().add(emptyLabel, BorderLayout.CENTER);
-
-		BufferedImage image = new BufferedImage(500, 500, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2 = (Graphics2D) image.getGraphics();
-		g2.setColor(Color.BLACK);
-		// g2.drawString("Hello world", 30, 30);
-
-		addNode(10, 10, g2);
-		addNode(30, 30, g2);
-		addNode(60, 60, g2);
-		addNode(90, 90, g2);
-		addNode(110, 110, g2);
-		addNode(300, 300, g2);
-
+		
 		int maxX = 1000;
 		int maxY = 1000;
-
+		
+		BufferedImage image = createImage();
+		
 		RectDraw drawing = new RectDraw(image, maxX, maxY);
 
 		frame.getContentPane().add(drawing);
@@ -42,10 +44,24 @@ public class Front extends JFrame {
 		frame.pack();
 		frame.setVisible(true);
 	}
+	
+	private BufferedImage createImage()
+	{
+		BufferedImage image = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = (Graphics2D) image.getGraphics();
+		g2.setColor(Color.BLACK);
+		// g2.drawString("Hello world", 30, 30);
+		Set<Node> allNodes = graph.getAllNodes();
+	
+		for(Node n:allNodes)
+		{
+			Point2D pos = n.getPosition();
+			addNode((int)pos.getX(), (int)pos.getY(), g2);
+		}
+		return image;
+	}
 
 	private void addNode(int x, int y, Graphics2D graphic) {
-		// RectDraw newrect = new RectDraw(x, y);
-		// drawing.add(newrect);
 		graphic.setColor(Color.RED);
 		graphic.drawRect(x, y, 10, 10);
 		graphic.fillRect(x, y, 10, 10);
@@ -77,7 +93,11 @@ public class Front extends JFrame {
 	public static void main(String[] args) {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				Front f = new Front();
+				GraphGenerator gen = new GraphGenerator(10, 10);
+				Graph g = gen.generate();
+				Front f = new Front(g);
+				g.toString();
+				
 			}
 		});
 	}

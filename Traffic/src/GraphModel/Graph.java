@@ -27,6 +27,10 @@ public class Graph {
 	public int getNumEdges() {
 		return allEdges.size();
 	}
+	public Set<Node> getAllNodes()
+	{
+		return allNodes;
+	}
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append("Nodes:\n");

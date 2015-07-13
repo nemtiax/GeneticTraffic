@@ -18,6 +18,7 @@ public class GraphGenerator {
 		for(int i = 0;i<numNodes;i++) {
 			Point2D.Double randomPoint = new Point2D.Double(r.nextDouble()*1000,r.nextDouble()*1000);
 			Node n = new Node();
+			n.setPosition(randomPoint);
 			nodes.put(randomPoint,n);
 			result.addNode(n);
 		}
