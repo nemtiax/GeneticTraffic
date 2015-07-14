@@ -19,6 +19,7 @@ import GraphModel.Node;
 
 public class Front extends JFrame {
 	Graph graph;
+
 	public Front(Graph g) {
 		this.graph = g;
 		initUI();
@@ -31,12 +32,25 @@ public class Front extends JFrame {
 
 		JLabel emptyLabel = new JLabel("Hello");
 		frame.getContentPane().add(emptyLabel, BorderLayout.CENTER);
-		
-		int maxX = 1000;
-		int maxY = 1000;
-		
-		BufferedImage image = createImage();
-		
+
+		int maxX = 0;
+		int maxY = 0;
+		Set<Node> allNodes = graph.getAllNodes();
+		for (Node n : allNodes) {
+			int x = (int) n.getPosition().getX();
+			int y = (int) n.getPosition().getY();
+			if (x > maxX) {
+				maxX = x;
+			}
+			if (y > maxY) {
+				maxY = y;
+			}
+		}
+		maxX += 20;
+		maxY /= 2;
+		maxY += 20;
+		BufferedImage image = createImage(allNodes, maxX, maxY);
+
 		RectDraw drawing = new RectDraw(image, maxX, maxY);
 
 		frame.getContentPane().add(drawing);
@@ -44,19 +58,17 @@ public class Front extends JFrame {
 		frame.pack();
 		frame.setVisible(true);
 	}
-	
-	private BufferedImage createImage()
-	{
-		BufferedImage image = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
+
+	private BufferedImage createImage(Set<Node> allNodes, int x, int y) {
+
+		BufferedImage image = new BufferedImage(x, y, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = (Graphics2D) image.getGraphics();
 		g2.setColor(Color.BLACK);
 		// g2.drawString("Hello world", 30, 30);
-		Set<Node> allNodes = graph.getAllNodes();
-	
-		for(Node n:allNodes)
-		{
+
+		for (Node n : allNodes) {
 			Point2D pos = n.getPosition();
-			addNode((int)pos.getX(), (int)pos.getY(), g2);
+			addNode((int) pos.getX(), (int) pos.getY() /2, g2);
 		}
 		return image;
 	}
@@ -97,7 +109,7 @@ public class Front extends JFrame {
 				Graph g = gen.generate();
 				Front f = new Front(g);
 				g.toString();
-				
+
 			}
 		});
 	}
