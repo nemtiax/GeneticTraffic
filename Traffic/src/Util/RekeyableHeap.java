@@ -45,7 +45,10 @@ public class RekeyableHeap<T,K extends Comparable<K>> {
 		percUp(heap.size()-1);
 	}
 	public void delete(T item) {
-		
+		HeapItem<T,K> heapItem = heap.get(lookupTable.get(item));
+		heapItem.setAbsoluteMin(true);
+		percUp(lookupTable.get(item));
+		deleteMin();
 	}
 	
 	private int getLeftChildIndex(int index) {
@@ -105,10 +108,15 @@ public class RekeyableHeap<T,K extends Comparable<K>> {
 		
 		private T item;
 		private K key;
+		boolean isMin;
 		
 		public HeapItem(T item, K key) {
 			this.item = item;
 			this.key = key;
+			this.isMin = false;
+		}
+		public void setAbsoluteMin(boolean isMin) {
+			this.isMin = isMin;
 		}
 		public K getKey() {
 			return key;
@@ -123,6 +131,13 @@ public class RekeyableHeap<T,K extends Comparable<K>> {
 			return item + " : " + key;
 		}
 		public int compareTo(HeapItem<T,K> o) {
+			if(o.isMin && isMin) {
+				return 0;
+			} else if(isMin) {
+				return -1;
+			} else if(o.isMin) {
+				return 1;
+			}
 			return key.compareTo(o.key);
 		}
 	}
@@ -134,11 +149,12 @@ public class RekeyableHeap<T,K extends Comparable<K>> {
 		test.insert("Five", 5);
 		test.insert("Three", 3);
 		test.insert("Two", 2);
+		test.delete("Five");
 		System.out.println(test.deleteMin());
 		System.out.println(test.deleteMin());
 		System.out.println(test.deleteMin());
 		System.out.println(test.deleteMin());
-		System.out.println(test.deleteMin());
+		
 	}
 	
 }

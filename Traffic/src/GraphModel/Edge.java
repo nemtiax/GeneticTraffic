@@ -23,6 +23,10 @@ public class Edge {
 		travelling = new HashSet<Car>();
 	}
 	
+	public double getLength() {
+		return length;
+	}
+	
 	public Node getStart() {
 		return start;
 	}

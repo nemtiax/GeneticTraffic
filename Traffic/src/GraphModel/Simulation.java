@@ -3,9 +3,12 @@ package GraphModel;
 public class Simulation {
 	
 	Graph graph;
-	int numCars;
 	
-	public Simulation(Graph graph, int numCars) {
+	
+	public Simulation(Graph graph) {
+		this.graph = graph;
+	}
+	public void addRoute(Node start, Node end, int numCars) {
 		
 	}
 }
