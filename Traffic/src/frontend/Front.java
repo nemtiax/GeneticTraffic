@@ -68,16 +68,17 @@ public class Front extends JFrame {
 
 		for (Node n : allNodes) {
 			Point2D pos = n.getPosition();
-			addNode((int) pos.getX(), (int) pos.getY() /2, g2);
+			addNode((int) pos.getX(), (int) pos.getY() /2, n.getID(), g2);
 		}
 		return image;
 	}
 
-	private void addNode(int x, int y, Graphics2D graphic) {
+	private void addNode(int x, int y, int nodeID, Graphics2D graphic) {
 		graphic.setColor(Color.RED);
 		graphic.drawRect(x, y, 10, 10);
 		graphic.fillRect(x, y, 10, 10);
 		graphic.setColor(Color.BLACK);
+		graphic.drawString(Integer.toString(nodeID),x,y);
 
 	}
 
@@ -106,7 +107,9 @@ public class Front extends JFrame {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				GraphGenerator gen = new GraphGenerator(10, 10);
+				
 				Graph g = gen.generate();
+				g.generateShortestPaths();
 				Front f = new Front(g);
 				g.toString();
 

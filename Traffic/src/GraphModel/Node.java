@@ -6,11 +6,11 @@ import java.util.Set;
 
 public class Node {
 	
-	private static long uniqueIDCounter = 1;
+	private static int uniqueIDCounter = 0;
 	
 	private Set<Edge> outgoingEdges;
 	private Set<Edge> incomingEdges;
-	private final long id;
+	private final int id;
 	private Point2D position;
 	
 	public Node() {
@@ -29,7 +29,7 @@ public class Node {
 		return position;
 	}
 	
-	public long getID() {
+	public int getID() {
 		return id;
 	}
 	
@@ -42,6 +42,9 @@ public class Node {
 	}
 	public void addIncomingEdge(Edge e) {
 		incomingEdges.add(e);
+	}
+	public int hashCode() {
+		return id;
 	}
 	public boolean equals(Object o) {
 		if(o instanceof Node) {

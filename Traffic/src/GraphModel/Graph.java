@@ -36,25 +36,50 @@ public class Graph {
 	}
 	
 	public void generateShortestPaths() {
-		
+		//Floyd-Warshall
 		
 		double[][] distances = new double[allNodes.size()][allNodes.size()];
-		Node[][] parent = new Node[allNodes.size()][allNodes.size()];
+		Node[][] child = new Node[allNodes.size()][allNodes.size()];
 		for(int i = 0;i<allNodes.size();i++) {
 			for(int j = 0;j<allNodes.size();j++) {
 				distances[i][j] = Double.POSITIVE_INFINITY;
-				parent[i][j] = null;
+				child[i][j] = null;
+				if(i==j) {
+					distances[i][j] = 0;
+				}
 			}
 		}
 		
 		for(Edge e : allEdges) {
-			int startID = (int)e.getStart().getID();
-			int endID = (int)e.getEnd().getID();
+			int startID = e.getStart().getID();
+			int endID = e.getEnd().getID();
 			distances[startID][endID] = e.getLength();
+			child[startID][endID] = e.getEnd();
 		}
 		
-		for(Node destination : allNodes) {
-			
+		for(Node k : allNodes) {
+			for(Node j : allNodes) {
+				for(Node i : allNodes) {
+					if(distances[i.getID()][k.getID()] + distances[k.getID()][j.getID()] < distances[i.getID()][j.getID()]) {
+						distances[i.getID()][j.getID()] = distances[i.getID()][k.getID()] + distances[k.getID()][j.getID()];
+						child[i.getID()][j.getID()] = child[i.getID()][k.getID()];
+					}
+				}
+			}
+		}
+		for(Node start : allNodes) {
+			for(Node end : allNodes) {
+				System.out.println("Distance from " + start + " to " + end + " is " + distances[start.getID()][end.getID()]);
+				if(distances[start.getID()][end.getID()]!=Double.POSITIVE_INFINITY) {
+					Route startToEnd = new Route(start);
+					Node current = start;
+					while(!current.equals(end)) {
+						current = child[current.getID()][end.getID()];
+						startToEnd.setNext(current);
+					}
+					System.out.println(startToEnd);
+				}
+			}
 		}
 	}
 	
