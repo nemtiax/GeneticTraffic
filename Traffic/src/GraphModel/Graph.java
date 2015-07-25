@@ -34,6 +34,10 @@ public class Graph {
 	{
 		return allNodes;
 	}
+	public Set<Edge> getAllEdges()
+	{
+		return allEdges;
+	}
 	
 	public void generateShortestPaths() {
 		//Floyd-Warshall

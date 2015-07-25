@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.Set;
@@ -13,13 +14,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import GraphModel.Edge;
 import GraphModel.Graph;
 import GraphModel.GraphGenerator;
 import GraphModel.Node;
 
 public class Front extends JFrame {
 	Graph graph;
-
+	private final int ARR_SIZE = 4;
 	public Front(Graph g) {
 		this.graph = g;
 		initUI();
@@ -46,10 +48,11 @@ public class Front extends JFrame {
 				maxY = y;
 			}
 		}
+		Set<Edge> allEdges = graph.getAllEdges();
 		maxX += 20;
 		maxY /= 2;
 		maxY += 20;
-		BufferedImage image = createImage(allNodes, maxX, maxY);
+		BufferedImage image = createImage(allEdges, allNodes, maxX, maxY);
 
 		RectDraw drawing = new RectDraw(image, maxX, maxY);
 
@@ -59,7 +62,7 @@ public class Front extends JFrame {
 		frame.setVisible(true);
 	}
 
-	private BufferedImage createImage(Set<Node> allNodes, int x, int y) {
+	private BufferedImage createImage(Set<Edge> allEdges, Set<Node> allNodes, int x, int y) {
 
 		BufferedImage image = new BufferedImage(x, y, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = (Graphics2D) image.getGraphics();
@@ -70,8 +73,38 @@ public class Front extends JFrame {
 			Point2D pos = n.getPosition();
 			addNode((int) pos.getX(), (int) pos.getY() /2, n.getID(), g2);
 		}
+		for (Edge e: allEdges)
+		{
+			Point2D startPos = e.getStart().getPosition();
+			Point2D endPos = e.getEnd().getPosition();
+			//drawArrow(g2, (int) startPos.getX(),(int)startPos.getY()/2,100,100);
+			drawArrow(g2, 30,300,300,190);
+		}
 		return image;
 	}
+//Luka version that works, but undirected arrows
+	private void drawArrow(Graphics2D g2, Edge e) {
+		Point2D startPos = e.getStart().getPosition();
+		Point2D endPos = e.getEnd().getPosition();
+		g2.drawLine((int)startPos.getX(), (int)startPos.getY() / 2, (int)endPos.getX(), (int)endPos.getY() / 2);
+	
+	}
+	//stackoverflow version that almost works
+	  void drawArrow(Graphics2D g, int x1, int y1, int x2, int y2) {
+         // Graphics2D g = (Graphics2D) g1.create();
+
+          double dx = x2 - x1, dy = y2 - y1;
+          double angle = Math.atan2(dy, dx);
+          int len = (int) Math.sqrt(dx*dx + dy*dy);
+          AffineTransform at = AffineTransform.getTranslateInstance(x1, y1);
+          at.concatenate(AffineTransform.getRotateInstance(angle));
+          g.transform(at);
+
+          // Draw horizontal arrow starting in (0, 0)
+          g.drawLine(0, 0, len, 0);
+          g.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len},
+                        new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
+      }
 
 	private void addNode(int x, int y, int nodeID, Graphics2D graphic) {
 		graphic.setColor(Color.RED);
