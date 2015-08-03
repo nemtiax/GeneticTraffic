@@ -26,6 +26,9 @@ public class Edge {
 	public double getLength() {
 		return length;
 	}
+	public int getCapacity() {
+		return capacity;
+	}
 	
 	public Node getStart() {
 		return start;

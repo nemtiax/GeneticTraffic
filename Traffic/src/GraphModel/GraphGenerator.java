@@ -53,6 +53,10 @@ public class GraphGenerator {
 		GraphGenerator gen = new GraphGenerator(10,35);
 		Graph result = gen.generate();
 		System.out.println(result);
-		result.generateShortestPaths();		
+		result.generateShortestPaths();
+		Car c = new Car(result.getRandomNode(),result.getRandomNode());
+		c.generateInitialRoute(result);
+		System.out.println("======");
+		System.out.println(c.routeString());
 	}
 }

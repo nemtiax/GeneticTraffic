@@ -5,9 +5,11 @@ import java.util.HashMap;
 public class Route {
 	private HashMap<Node, Node> next;
 	private Node last;
+	private Node start;
 	private StringBuilder toString;
 	public Route(Node start) {
 		next = new HashMap<Node,Node>();
+		this.start = start;
 		last = start;
 		toString = new StringBuilder();
 		toString.append(start.toString());
@@ -22,6 +24,9 @@ public class Route {
 	}
 	public String toString() {
 		return toString.toString();
+	}
+	public Node getStart() {
+		return start;
 	}
 	
 }
