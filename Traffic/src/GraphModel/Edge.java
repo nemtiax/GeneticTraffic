@@ -30,11 +30,30 @@ public class Edge {
 		return capacity;
 	}
 	
+	public void addWaitingCar(Car c) {
+		waiting.add(c);
+	}
+	public void addTravellingCar(Car c) {
+		travelling.add(c);
+	}
+	public void removeTravellingCar(Car c) {
+		travelling.remove(c);
+	}
+	public boolean hasWaitingCar() {
+		return waiting.isEmpty();
+	}
+	public Car removeNextWaitingCar() {
+		return waiting.removeFirst();
+	}
+	
 	public Node getStart() {
 		return start;
 	}
 	public Node getEnd() {
 		return end;
+	}
+	public boolean isFull() {
+		return travelling.size() == capacity;
 	}
 	
 	

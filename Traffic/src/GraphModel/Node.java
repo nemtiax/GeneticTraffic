@@ -1,6 +1,7 @@
 package GraphModel;
 
 import java.awt.geom.Point2D;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ public class Node {
 	
 	private Set<Edge> outgoingEdges;
 	private Set<Edge> incomingEdges;
+	private HashMap<Node,Edge> outgoingEdgeTable;
 	private final int id;
 	private Point2D position;
 	
@@ -17,6 +19,7 @@ public class Node {
 		id = uniqueIDCounter++;
 		outgoingEdges = new HashSet<Edge>();
 		incomingEdges = new HashSet<Edge>();
+		outgoingEdgeTable = new HashMap<>();
 	}
 	
 	public void setPosition(Point2D pos)
@@ -39,9 +42,13 @@ public class Node {
 	
 	public void addOutgoingEdge(Edge e) {
 		outgoingEdges.add(e);
+		outgoingEdgeTable.put(e.getEnd(),e);
 	}
 	public void addIncomingEdge(Edge e) {
 		incomingEdges.add(e);
+	}
+	public Edge getOutgoingEdge(Node dest) {
+		return outgoingEdgeTable.get(dest);
 	}
 	public int hashCode() {
 		return id;

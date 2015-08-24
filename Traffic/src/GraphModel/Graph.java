@@ -14,6 +14,7 @@ import java.util.Set;
 public class Graph {
 	private Set<Node> allNodes;
 	private Set<Edge> allEdges;
+	
 	private HashMap<Node, HashMap<Node, Route>> shortestRoutes;
 	private double[][] distances;
 	private Random r = new Random();
@@ -21,7 +22,9 @@ public class Graph {
 		allNodes = new HashSet<Node>();
 		allEdges = new HashSet<Edge>();
 		shortestRoutes = new HashMap<>();  
+		
 	}
+
 	public void addNode(Node n) {
 		allNodes.add(n);
 	}

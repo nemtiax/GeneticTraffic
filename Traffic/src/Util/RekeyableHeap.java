@@ -38,6 +38,11 @@ public class RekeyableHeap<T,K extends Comparable<K>> {
 		percDown(0);
 		return result;
 	}
+	
+	public T getNext() {
+		return deleteMin().getItem();
+	}
+	
 	public void insert(T item, K key) {
 		HeapItem<T,K> newItem = new HeapItem<>(item,key);
 		heap.add(newItem);
@@ -104,7 +109,7 @@ public class RekeyableHeap<T,K extends Comparable<K>> {
 	
 	
 	
-	private class HeapItem<T,K extends Comparable<K>> implements Comparable<HeapItem<T,K>> {
+	public class HeapItem<T,K extends Comparable<K>> implements Comparable<HeapItem<T,K>> {
 		
 		private T item;
 		private K key;
