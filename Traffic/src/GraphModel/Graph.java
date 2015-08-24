@@ -42,6 +42,9 @@ public class Graph {
 	public int getNumEdges() {
 		return allEdges.size();
 	}
+	public Set<Edge> getAllEdges() {
+		return allEdges;
+	}
 	public Set<Node> getAllNodes()
 	{
 		return allNodes;
@@ -166,3 +169,4 @@ public class Graph {
 		return result.toString();
 	}
 }
+
