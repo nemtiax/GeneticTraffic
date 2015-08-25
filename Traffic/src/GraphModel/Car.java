@@ -11,14 +11,18 @@ public class Car {
 	private LinkedList<Node> genome = new LinkedList<>();
 	private Route myRoute;
 	private boolean isWaitingToSpawn;
+	private boolean isWaitingForEdge;
+	private boolean isTravellingOnEdge;
 	private Edge currentEdge;
 	
 	public Car(Node source, Node destination) {
 		this.id = uniqueIDCounter++;
 		this.source = source;
 		this.destination = destination;
-		System.out.println("Making car from " + source + " to " + destination);
+		
 		this.isWaitingToSpawn = true;
+		this.isWaitingForEdge = false;
+		this.isTravellingOnEdge = false;
 		this.currentEdge = null;
 	}
 	public void setCurrentEdge(Edge e) {
@@ -48,6 +52,13 @@ public class Car {
 		}
 		buildRouteFromGenome();
 	}
+	public Car clone() {
+		Car result = new Car(source,destination);
+		result.genome = new LinkedList<>(this.genome);
+		result.myRoute = this.myRoute;
+		
+		return result;
+	}
 	public Route getRoute() {
 		return myRoute;
 	}
@@ -66,12 +77,37 @@ public class Car {
 	public Node getEndingNode() {
 		return genome.getLast();
 	}
-	
+	public boolean isWaitingForEdge() {
+		return isWaitingForEdge;
+	}
+	public boolean isTravellingOnEdge() {
+		return isTravellingOnEdge;
+	}
 	public boolean isWaitingToSpawn() {
 		return isWaitingToSpawn;
 	}
-	public void setWaitingToSpawn(boolean waiting) {
-		isWaitingToSpawn = waiting;
+	//ensure that only one of these is ever set
+	public void setWaitingToSpawn() {
+		isWaitingToSpawn = true;
+		currentEdge = null;
+		isTravellingOnEdge = false;
+		isWaitingForEdge = false;
+	}
+	public void setTravellingOnEdge(Edge e) {
+		isWaitingToSpawn = false;
+		isTravellingOnEdge = true;
+		currentEdge = e;
+		isWaitingForEdge = false;
+		
+	}
+	public void setWaitingForEdge(Edge e) {
+		isWaitingToSpawn = false;
+		isTravellingOnEdge = false;
+		isWaitingForEdge = true;
+		currentEdge = e;
+	}
+	public String toString() {
+		return "[Car route: " + routeString() + "]";
 	}
 	
 	public String routeString() {

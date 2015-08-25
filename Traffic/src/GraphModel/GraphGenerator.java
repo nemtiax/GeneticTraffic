@@ -56,7 +56,6 @@ public class GraphGenerator {
 		result.generateShortestPaths();
 		Car c = new Car(result.getRandomNode(),result.getRandomNode());
 		c.generateInitialRoute(result);
-		System.out.println("======");
-		System.out.println(c.routeString());
+
 	}
 }

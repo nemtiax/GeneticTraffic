@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
@@ -14,6 +15,7 @@ import java.util.Set;
 public class Graph {
 	private Set<Node> allNodes;
 	private Set<Edge> allEdges;
+	private Map<String, Node> nodesByLabels;
 	
 	private HashMap<Node, HashMap<Node, Route>> shortestRoutes;
 	private double[][] distances;
@@ -21,12 +23,22 @@ public class Graph {
 	public Graph() {
 		allNodes = new HashSet<Node>();
 		allEdges = new HashSet<Edge>();
-		shortestRoutes = new HashMap<>();  
+		shortestRoutes = new HashMap<>(); 
+		nodesByLabels = new HashMap<>();
 		
 	}
-
+	
+	
+	
 	public void addNode(Node n) {
+		if(nodesByLabels.containsKey(n.getLabel()) && !nodesByLabels.get(n.getLabel()).equals(n)) {
+			throw new IllegalArgumentException("Could not add node: " + n + " because graph already contains a node which that label: " + nodesByLabels.get(n.getLabel()));
+		}
 		allNodes.add(n);
+		nodesByLabels.put(n.getLabel(), n);
+	}
+	public Node getNodeByLabel(String label) {
+		return nodesByLabels.get(label);
 	}
 	public void addEdge(Edge e) {
 		allEdges.add(e);
@@ -55,7 +67,7 @@ public class Graph {
 	}
 	
 	public boolean reachable(Node source, Node dest) {
-		System.out.println(source + " " + dest);
+		//System.out.println(source + " " + dest);
 		return distances[source.getID()][dest.getID()]!=Double.POSITIVE_INFINITY;
 	}
 	public Route getRoute(Node start, Node end) {
@@ -96,7 +108,7 @@ public class Graph {
 		for(Node start : allNodes) {
 			shortestRoutes.put(start,new HashMap<Node, Route>());
 			for(Node end : allNodes) {
-				System.out.println("Distance from " + start + " to " + end + " is " + distances[start.getID()][end.getID()]);
+				//System.out.println("Distance from " + start + " to " + end + " is " + distances[start.getID()][end.getID()]);
 				if(distances[start.getID()][end.getID()]!=Double.POSITIVE_INFINITY) {
 					Route startToEnd = new Route(start);
 					Node current = start;
@@ -104,35 +116,42 @@ public class Graph {
 						current = child[current.getID()][end.getID()];
 						startToEnd.setNext(current);
 					}
-					System.out.println(startToEnd);
+					//System.out.println(startToEnd);
 					shortestRoutes.get(start).put(end,startToEnd);
 				}
 			}
 		}
 	}
 	
-	public static Graph readFromFile(File input) throws IOException {
+	public static Graph readFromFile(File input, boolean includesLengths) throws IOException {
 		Scanner s = new Scanner(input);
 		Graph result = new Graph();
-		HashMap<Integer,Node> nodesByID = new HashMap<Integer,Node>();
+		HashMap<String,Node> nodesByID = new HashMap<String,Node>();
 		int numNodes = s.nextInt();
 		int numEdges = s.nextInt();
 		for(int n = 0;n<numNodes;n++) {
-			int id = s.nextInt();
+			String id = s.next();
 			double x = s.nextDouble();
 			double y = s.nextDouble();
-			Node node = new Node();
+			Node node = new Node(id);
 			node.setPosition(new Point2D.Double(x,y));
 			nodesByID.put(id,node);
 			result.addNode(node);
 		}
 		for(int e = 0;e<numEdges;e++) {
-			int firstID = s.nextInt();
-			int secondID = s.nextInt();
+			String firstID = s.next();
+			String secondID = s.next();
 			Node start = nodesByID.get(firstID);
 			Node end = nodesByID.get(secondID);
-			double length = s.nextDouble();
-			int capacity = s.nextInt();
+			double length;
+			int capacity;
+			if(includesLengths) {
+				 length = s.nextDouble();
+				 capacity = s.nextInt();
+			} else {
+				length = getLengthFromNodes(start,end);
+				capacity = getCapacityFromLength(length);
+			}
 			Edge edge = new Edge(start,end,length,capacity);
 			result.addEdge(edge);
 		}
@@ -140,6 +159,16 @@ public class Graph {
 		
 		return result;
 	}
+	private static double getLengthFromNodes(Node s, Node e) {
+		Point2D start = s.getPosition();
+		Point2D end = e.getPosition();
+		return Math.sqrt((start.getX()-end.getX())*(start.getX()-end.getX()) + (start.getY()-end.getY())*(start.getY()-end.getY()));
+	}
+	
+	private static int getCapacityFromLength(double length) {
+		return Math.max(1,(int)(length/25));
+	}
+	
 	public void writeToFile(File output) throws IOException {
 		FileWriter out = new FileWriter(output);
 		

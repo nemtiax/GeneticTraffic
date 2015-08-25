@@ -38,7 +38,9 @@ public class RekeyableHeap<T,K extends Comparable<K>> {
 		percDown(0);
 		return result;
 	}
-	
+	public int size() {
+		return heap.size();
+	}
 	public T getNext() {
 		return deleteMin().getItem();
 	}
@@ -54,6 +56,9 @@ public class RekeyableHeap<T,K extends Comparable<K>> {
 		heapItem.setAbsoluteMin(true);
 		percUp(lookupTable.get(item));
 		deleteMin();
+	}
+	public boolean contains(T item) {
+		return lookupTable.containsKey(item);
 	}
 	
 	private int getLeftChildIndex(int index) {

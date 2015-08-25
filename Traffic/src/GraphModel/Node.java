@@ -9,17 +9,26 @@ public class Node {
 	
 	private static int uniqueIDCounter = 0;
 	
+	
 	private Set<Edge> outgoingEdges;
 	private Set<Edge> incomingEdges;
 	private HashMap<Node,Edge> outgoingEdgeTable;
 	private final int id;
 	private Point2D position;
+	private String label;
 	
 	public Node() {
+		this(Integer.toString(uniqueIDCounter)); //if no label supplied, use the id
+	}
+	public Node(String label) {
+		this.label = label;
 		id = uniqueIDCounter++;
 		outgoingEdges = new HashSet<Edge>();
 		incomingEdges = new HashSet<Edge>();
 		outgoingEdgeTable = new HashMap<>();
+	}
+	public String getLabel() {
+		return label;
 	}
 	
 	public void setPosition(Point2D pos)
@@ -37,7 +46,7 @@ public class Node {
 	}
 	
 	public String toString() {
-		return "Node " + id;
+		return "[Node label:" + label + "]";
 	}
 	
 	public void addOutgoingEdge(Edge e) {

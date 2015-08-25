@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class Edge {
 	private Node start,end;
-	private LinkedList<Car> waiting;
+	private LinkedList<Car> waiting; //TODO: use a different data structure so that removing an arbitrary car is faster
 	private Set<Car> travelling;
 	
 	private final double length;
@@ -40,10 +40,14 @@ public class Edge {
 		travelling.remove(c);
 	}
 	public boolean hasWaitingCar() {
-		return waiting.isEmpty();
+		
+		return !waiting.isEmpty();
 	}
 	public Car removeNextWaitingCar() {
 		return waiting.removeFirst();
+	}
+	public void removeWaitingCar(Car c) {
+		waiting.remove(c);
 	}
 	
 	public Node getStart() {

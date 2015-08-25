@@ -8,6 +8,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 
 import javax.swing.JFrame;
@@ -71,14 +73,15 @@ public class Front extends JFrame {
 
 		for (Node n : allNodes) {
 			Point2D pos = n.getPosition();
-			addNode((int) pos.getX(), (int) pos.getY() /2, n.getID(), g2);
+			addNode(n, g2);
 		}
 		for (Edge e: allEdges)
 		{
 			Point2D startPos = e.getStart().getPosition();
 			Point2D endPos = e.getEnd().getPosition();
 			//drawArrow(g2, (int) startPos.getX(),(int)startPos.getY()/2,100,100);
-			drawArrow(g2, 30,300,300,190);
+			//drawArrow(g2, 30,300,300,190);
+			drawArrow(g2,e);
 		}
 		return image;
 	}
@@ -106,12 +109,12 @@ public class Front extends JFrame {
                         new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
       }
 
-	private void addNode(int x, int y, int nodeID, Graphics2D graphic) {
+	private void addNode(Node n, Graphics2D graphic) {
 		graphic.setColor(Color.RED);
-		graphic.drawRect(x, y, 10, 10);
-		graphic.fillRect(x, y, 10, 10);
+		//graphic.drawRect((int)n.getPosition().getX(), (int)n.getPosition().getY(), 10, 10);
+		graphic.fillRect((int)n.getPosition().getX(), (int)n.getPosition().getY()/2, 10, 10);
 		graphic.setColor(Color.BLACK);
-		graphic.drawString(Integer.toString(nodeID),x,y);
+		graphic.drawString(n.getLabel(),(int)n.getPosition().getX(), (int)n.getPosition().getY()/2);
 
 	}
 
@@ -141,8 +144,16 @@ public class Front extends JFrame {
 			public void run() {
 				GraphGenerator gen = new GraphGenerator(10, 10);
 				
-				Graph g = gen.generate();
-				g.generateShortestPaths();
+				
+				
+				Graph g = null;
+				try {
+					g = Graph.readFromFile(new File("Graphs/SimpleDiamond.txt"),false);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//g.generateShortestPaths();
 				Front f = new Front(g);
 				g.toString();
 
