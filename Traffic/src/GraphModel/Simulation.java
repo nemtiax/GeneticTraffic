@@ -50,7 +50,7 @@ public class Simulation {
 	}
 	public void run() {
 		int count = 0;
-		while(!heap.isEmpty() && count<100000) {
+		while(!heap.isEmpty() && count<1000000) {
 			if(count%10000==0) {
 				System.out.println("Statistics for step " + count);
 				printStatistics();
@@ -63,11 +63,14 @@ public class Simulation {
 	
 	}
 	
+	
+	
 	public void printStatistics() {
 		for(Itinerary itin : allTrips.keySet()) {
 			System.out.println("Routes for " + itin.getSource() + "=>" + itin.getDestination());
 			System.out.println("=============");
 			HashMap<String,Integer> routeCounts = new HashMap<String,Integer>();
+			HashMap<String,Double> routeTimeSums = new HashMap<String,Double>();
 			
 			for(Car c : allTrips.get(itin)) {
 				String routeString = c.routeString();
@@ -75,12 +78,25 @@ public class Simulation {
 					routeCounts.put(routeString, 0);
 				}
 				routeCounts.put(routeString,routeCounts.get(routeString)+1);
+				if(c.getTimeOfLastTrip()!=-1) { //-1 indicates this car is new and has not yet completed a trip
+					if(!routeTimeSums.containsKey(routeString)) {
+						routeTimeSums.put(routeString, 0d);
+					}
+					routeTimeSums.put(routeString, routeTimeSums.get(routeString)+c.getTimeOfLastTrip());
+				}
+				
 			}
 			
 			ArrayList<String> allRouteStrings = new ArrayList<>(routeCounts.keySet());
 			Collections.sort(allRouteStrings,new RouteSorter(routeCounts));
 			for(String route : allRouteStrings) {
-				System.out.println(route + " " + routeCounts.get(route));
+				
+				String avgTime = "none"; //we might have no cars on this route that have finished yet
+				if(routeTimeSums.containsKey(route)) {
+					avgTime = Double.toString(routeTimeSums.get(route)/routeCounts.get(route));
+				}
+				
+				System.out.println(route + " " + routeCounts.get(route) + ", avg time: " + avgTime);
 			}
 			
 			
@@ -110,6 +126,7 @@ public class Simulation {
 			Node nextDestination = nextCar.getRoute().getNext(start);
 			Edge nextEdge = start.getOutgoingEdge(nextDestination);
 			addCarToEdge(nextCar,nextEdge,eventTime);
+			nextCar.setTimeOfSpawn(eventTime);
 			//System.out.println(nextCar + " spawns at " + start);
 		} else {
 			Edge currentEdge = nextCar.getCurrentEdge();
@@ -117,6 +134,7 @@ public class Simulation {
 		//	System.out.println(nextCar + " arrives at " + arrival);
 			removeCarFromEdge(nextCar,nextCar.getCurrentEdge(),eventTime);
 			if(arrival.equals(nextCar.getEndingNode())) {
+				nextCar.setCompletedTime(eventTime);
 				nextCar.setWaitingToSpawn();
 				heap.insert(nextCar, eventTime + r.nextDouble()*initPhaseLength);
 				
@@ -179,7 +197,9 @@ public class Simulation {
 		g.generateShortestPaths();
 		Simulation sim = new Simulation(g,100);
 		sim.addRoute(g.getNodeByLabel("1"), g.getNodeByLabel("3"), 50);
+		//sim.addRoute(g.getNodeByLabel("3"), g.getNodeByLabel("1"), 50);
 		sim.addRoute(g.getNodeByLabel("2"), g.getNodeByLabel("4"), 50);
+		//sim.addRoute(g.getNodeByLabel("4"), g.getNodeByLabel("2"), 50);
 		sim.initializeCars();
 		sim.run();
 	}

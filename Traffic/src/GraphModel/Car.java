@@ -15,6 +15,9 @@ public class Car {
 	private boolean isTravellingOnEdge;
 	private Edge currentEdge;
 	
+	private double timeOfLastSpawn = -1;
+	private double timeOfLastTrip = -1;
+	
 	public Car(Node source, Node destination) {
 		this.id = uniqueIDCounter++;
 		this.source = source;
@@ -77,6 +80,17 @@ public class Car {
 	public Node getEndingNode() {
 		return genome.getLast();
 	}
+	
+	public void setTimeOfSpawn(double time) {
+		timeOfLastSpawn = time;
+	}
+	public void setCompletedTime(double time) {
+		timeOfLastTrip = time - timeOfLastSpawn;
+	}
+	public double getTimeOfLastTrip() {
+		return timeOfLastTrip;
+	}
+	
 	public boolean isWaitingForEdge() {
 		return isWaitingForEdge;
 	}
